@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({
-  secret: 'any-long-secure-key-you-make-up-bsdjahbhsdvgsucguygw34u734ctw4xnx3887x3734t26cqx783c',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
@@ -35,7 +35,7 @@ app.post('/incomingMessage', (req, res) => {
 
   if (messageBody.toLowerCase() === 'sstop') {
     twiml.message('Please take care. Goodbye :)');
-    resetSessionVariables(sessionData);
+    req.session.destroy();
   }
   else if (sessionData.backToMainMenu) {
     welcomeMessageStep(twiml, sessionData);
