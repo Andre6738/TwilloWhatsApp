@@ -1,6 +1,6 @@
 const twilio = require('twilio');
-const { welcomeMessageStep, resetSessionVariables } = require('./sessionController');
-const { testUserInputSessionID } = require('./healthCheckController');
+const { welcomeMessageStep, resetSessionVariables, endSessionMessage, 
+        testSessionIDExistsStep, invalidOptionOccur} = require('./sessionController');
 const { sendBasicMessage } = require('./whatsappMessageController');
 
 function incomingMessageHandler(req, res) {
@@ -17,19 +17,11 @@ function incomingMessageHandler(req, res) {
     }
   
     if (messageBody.toLowerCase() === 'sstop') {
-      twiml.message('Please take care. Goodbye :)');
-      req.session.destroy();
+        endSessionMessage(twiml, req);
     } else if (sessionData.backToMainMenu) {
-      welcomeMessageStep(twiml, sessionData);
+        welcomeMessageStep(twiml, sessionData);
     } else if (sessionData.testSessionID) {
-      sessionData.UserInputSessionID = messageBody;
-      if (testUserInputSessionID(sessionData)) {
-        sessionData.testSessionID = false;
-        sessionData.testSessionIDMenu = true;
-        twiml.message('Please select the data you want to be displayed:\n1. Option 1\n2. Option 2\n3. Option 3\n4. Cancel');
-      } else {
-        twiml.message('Session ID does not exist. Please enter another session ID.');
-      }
+        testSessionIDExistsStep(twiml, sessionData, messageBody);
     } else if (sessionData.testSessionIDMenu) {
       if (messageBody === '1') {
         twiml.message('Option 1 selected');
@@ -42,7 +34,7 @@ function incomingMessageHandler(req, res) {
         resetSessionVariables(sessionData);
         welcomeMessageStep(twiml, sessionData);
       } else {
-        twiml.message('*Invalid option*\nPlease select the data you want to be displayed:\n1. Option 1\n2. Option 2\n3. Option 3\n4. Cancel');
+        invalidOptionOccur(twiml);
       }
     } else {
       twiml.message('Sorry, something went wrong, please try again or contact support');
