@@ -1,7 +1,7 @@
 const twilio = require('twilio');
 const { welcomeMessageStep, resetSessionVariables, endSessionMessage, 
         testSessionIDExistsStep, invalidOptionOccur} = require('./sessionController');
-const { sendBasicMessage } = require('./whatsappMessageController');
+const { sendBasicMessage, sendBasicMediaMessage } = require('./whatsappMessageController');
 
 function incomingMessageHandler(req, res) {
     const messageBody = req.body.Body;
@@ -15,6 +15,8 @@ function incomingMessageHandler(req, res) {
       sessionData.newSession = true;
       sessionData.backToMainMenu = true;
     }
+
+    sendBasicMediaMessage(sender, '', 'https://demo.twilio.com/owl.png');
   
     if (messageBody.toLowerCase() === 'sstop') {
         endSessionMessage(twiml, req);
