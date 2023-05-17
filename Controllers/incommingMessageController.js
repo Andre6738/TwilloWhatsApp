@@ -1,8 +1,7 @@
 const twilio = require('twilio');
 const { welcomeMessageStep, resetSessionVariables, endSessionMessage, 
-        testSessionIDExistsStep, invalidOptionOccur} = require('./sessionController');
-const { sendBasicMessage, sendBasicMediaMessage } = require('./whatsappMessageController');
-const { lineChart, verticalBarChart, horizontalBarChart, pieChart, doughnutChart } = require('./generateImagesController');
+        testSessionIDExistsStep, invalidOptionOccur, viewParticipants, 
+        viewSessionNotes, viewSessionSummary, viewTrends } = require('./sessionController');
 
 async function incomingMessageHandler(req, res) {
     const messageBody = req.body.Body;
@@ -28,28 +27,25 @@ async function incomingMessageHandler(req, res) {
 
     } else if (sessionData.testSessionIDMenu) {
       if (messageBody === '1') {
-        twiml.message('Option 1 selected');
-        const imageUrl = await doughnutChart();
-        sendBasicMediaMessage(sender, '', imageUrl);
+        viewParticipants(twiml, sessionData);
 
       } else if (messageBody === '2') {
-        twiml.message('Option 2 selected');
-        const imageUrl = await verticalBarChart();
-        sendBasicMediaMessage(sender, '', imageUrl);
+        viewSessionSummary(twiml, sessionData);
 
       } else if (messageBody === '3') {
-        twiml.message('Option 3 selected');
-        const imageUrl = await pieChart();
-        sendBasicMediaMessage(sender, '', imageUrl);
+        viewSessionNotes(twiml, sessionData);
 
       } else if (messageBody === '4') {
+        viewTrends(twiml, sessionData, sender);
+
+      } else if (messageBody === '5') {
         twiml.message('Canceled option');
         resetSessionVariables(sessionData);
         welcomeMessageStep(twiml, sessionData);
 
       } else {
         invalidOptionOccur(twiml);
-        
+
       }
     } else {
       twiml.message('Sorry, something went wrong, please try again or contact support');

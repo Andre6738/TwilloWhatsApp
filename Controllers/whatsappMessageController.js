@@ -3,7 +3,7 @@ const { ACCOUNT_SID, AUTH_TOKEN } = process.env;
 
 const client = new twilio(ACCOUNT_SID, AUTH_TOKEN);
 
-function sendBasicMessage(from, to, body) {
+function sendBasicMessage(to, body) {
   client.messages
     .create({
       body: body,
