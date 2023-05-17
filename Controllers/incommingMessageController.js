@@ -2,8 +2,9 @@ const twilio = require('twilio');
 const { welcomeMessageStep, resetSessionVariables, endSessionMessage, 
         testSessionIDExistsStep, invalidOptionOccur} = require('./sessionController');
 const { sendBasicMessage, sendBasicMediaMessage } = require('./whatsappMessageController');
+const { lineChart, verticalBarChart, horizontalBarChart, pieChart, doughnutChart } = require('./generateImagesController');
 
-function incomingMessageHandler(req, res) {
+async function incomingMessageHandler(req, res) {
     const messageBody = req.body.Body;
     const sender = req.body.From;
     const twilloSessionId = req.session.id;
@@ -15,28 +16,40 @@ function incomingMessageHandler(req, res) {
       sessionData.newSession = true;
       sessionData.backToMainMenu = true;
     }
-
-    sendBasicMediaMessage(sender, '', 'https://demo.twilio.com/owl.png');
   
     if (messageBody.toLowerCase() === 'sstop') {
         endSessionMessage(twiml, req);
+
     } else if (sessionData.backToMainMenu) {
         welcomeMessageStep(twiml, sessionData);
+
     } else if (sessionData.testSessionID) {
         testSessionIDExistsStep(twiml, sessionData, messageBody);
+
     } else if (sessionData.testSessionIDMenu) {
       if (messageBody === '1') {
         twiml.message('Option 1 selected');
+        const imageUrl = await doughnutChart();
+        sendBasicMediaMessage(sender, '', imageUrl);
+
       } else if (messageBody === '2') {
         twiml.message('Option 2 selected');
+        const imageUrl = await verticalBarChart();
+        sendBasicMediaMessage(sender, '', imageUrl);
+
       } else if (messageBody === '3') {
         twiml.message('Option 3 selected');
+        const imageUrl = await pieChart();
+        sendBasicMediaMessage(sender, '', imageUrl);
+
       } else if (messageBody === '4') {
         twiml.message('Canceled option');
         resetSessionVariables(sessionData);
         welcomeMessageStep(twiml, sessionData);
+
       } else {
         invalidOptionOccur(twiml);
+        
       }
     } else {
       twiml.message('Sorry, something went wrong, please try again or contact support');
