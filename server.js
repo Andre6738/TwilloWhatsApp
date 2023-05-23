@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const { incomingMessageHandler } = require('./Controllers/incommingMessageController');
 
-const { SESSION_SECRET } = process.env;
+const { SESSION_SECRET, PORT } = process.env;
 
 const app = express();
 
@@ -25,6 +25,6 @@ app.post('/error', (req, res) => {
   errorHandler(req, res);
 });
 
-app.listen(3000, () => {
-  console.log('WhatsApp chatbot listening on port 3000!');
+app.listen(PORT, () => {
+  console.log('WhatsApp chatbot listening on port ' + PORT);
 });
