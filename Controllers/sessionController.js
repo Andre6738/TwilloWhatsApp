@@ -37,12 +37,11 @@ function mainMenuMessage(twiml) {
 }
 
 function invalidOptionOccur(twiml) {
-    twiml.message('*Invalid option*\nPlease select the data you want to be displayed:\n1. View Participants\n2. View Session Summary\n3. View Session notes\n4. View Trends\n5. Cancel');
+    twiml.message('*Invalid option*\nPlease select the data you want to be displayed:\n1. View Participants 👥\n2. View Session Summary 📋\n3. View Session notes 📝\n4. View Trend 📊\n5. Cancel 🔙');
 }
 
 function viewParticipants(twiml, sessionData) {
     twiml.message('*The participants in the Team 1 - 09/03/2023 are as follows:*\n1. Zane - Host\n2. Wesley Chetty - Member');
-    mainMenuMessage(twiml);
 }
 
 function viewSessionSummary(twiml, sessionData) {
@@ -51,7 +50,6 @@ function viewSessionSummary(twiml, sessionData) {
 
 function viewSessionNotes(twiml, sessionData) {
     twiml.message('Session notes');
-    mainMenuMessage(twiml);
 }
 
 async function viewTrends(twiml, sessionData, sender) {
