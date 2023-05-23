@@ -33,7 +33,7 @@ function testSessionIDExistsStep(twiml, sessionData, messageBody) {
 }
 
 function mainMenuMessage(twiml) {
-    twiml.message('Please select the data you want to be displayed:\n1. View Participants\n2. View Session Summary\n3. View Session notes\n4. View Trends\n5. Cancel');
+    twiml.message('Please select the data you want to be displayed:\n1. View Participants 👥\n2. View Session Summary 📋\n3. View Session notes 📝\n4. View Trend 📊\n5. Cancel 🔙');
 }
 
 function invalidOptionOccur(twiml) {
